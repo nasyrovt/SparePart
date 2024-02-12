@@ -7,7 +7,7 @@
 #include "SparePartCharacter.generated.h"
 
 UCLASS(Blueprintable)
-class ASparePartCharacter : public ACharacter
+class SPAREPART_API ASparePartCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -26,6 +26,9 @@ private:
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* TopDownCameraComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UEquipmentComponent* EquipmentComponent = nullptr;
 
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))

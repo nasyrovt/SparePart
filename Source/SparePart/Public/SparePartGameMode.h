@@ -6,8 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "SparePartGameMode.generated.h"
 
-UCLASS(minimalapi)
-class ASparePartGameMode : public AGameModeBase
+UCLASS()
+class SPAREPART_API ASparePartGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
