@@ -32,6 +32,8 @@ void ASparePartPlayerController::SetupInputComponent()
 {
 	// set up gameplay key bindings
 	Super::SetupInputComponent();
+
+	
 	
 }
 
