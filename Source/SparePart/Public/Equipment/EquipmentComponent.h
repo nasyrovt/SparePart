@@ -8,6 +8,7 @@
 #include "EquipmentComponent.generated.h"
 
 
+class AEquipmentActor;
 
 UCLASS(BlueprintType, Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SPAREPART_API UEquipmentComponent : public UActorComponent
@@ -31,6 +32,15 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category="Equipment")
 	TMap<TEnumAsByte<EBodyPartType>, TSubclassOf<UBodyPart>> BodyPartsClassMap;
+
+	UPROPERTY(EditDefaultsOnly, Category="Equipment")
+	FVector SpawnOffset;
+
+	UPROPERTY(EditDefaultsOnly, Category="Equipment")
+	FVector ScaleOverride;
+
+	UPROPERTY(EditDefaultsOnly, Category="Equipment")
+	TSubclassOf<AEquipmentActor> EquipmentActorClassOverride;
 
 	void DropBodyPartBySlot(EBodyPartType BodyPart);
 	

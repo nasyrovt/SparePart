@@ -30,13 +30,22 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable)
+	void UpdateVisuals();
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Components")
 	class UStaticMeshComponent* MeshComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Components")
 	class UInteractionComponent* InteractionComponent = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PartInformation")
+	void SetBodyPart(UBodyPart* InBodyPart);
+
+	void SetBodyPartClass(TSubclassOf<UBodyPart> InBodyPartClass);
+
+private:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PartInformation", meta=(AllowPrivateAccess=true))
 	TSubclassOf<UBodyPart> BodyPartClass;
 
 	UPROPERTY(VisibleAnywhere)

@@ -18,6 +18,7 @@ class SPAREPART_API UInteractionComponent : public UWidgetComponent
 public:
 	// Sets default values for this component's properties
 	UInteractionComponent();
+	void RegisterToSubsystem();
 
 	UPROPERTY(BlueprintAssignable)
 	FOnInteractionExecuted OnInteractionExecuted;
@@ -39,6 +40,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateInteractionButtonVisibility(bool bCanBeExecuted);
 
+	virtual void OnRegister() override;
+	
 	void ReInit();
 	UFUNCTION(BlueprintImplementableEvent)
 	void ReInitBP();

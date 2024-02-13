@@ -21,7 +21,7 @@ AEquipmentActor::AEquipmentActor()
 
 void AEquipmentActor::HandleInteractionPressed()
 {
-	if(ASparePartCharacter* PlayerCharacter = Cast<ASparePartCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0)))
+	if(const ASparePartCharacter* PlayerCharacter = Cast<ASparePartCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0)))
 	{
 		if(UEquipmentComponent* EquipmentComponent = PlayerCharacter->GetEquipmentComponent())
 		{
@@ -48,6 +48,7 @@ void AEquipmentActor::BeginPlay()
 		{
 			InteractionComponent->InitWithPartInfo(BodyPart->PartInfo);
 		}
+		UpdateVisuals();
 	}
 	
 	if(InteractionComponent)
@@ -61,4 +62,34 @@ void AEquipmentActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
+
+void AEquipmentActor::UpdateVisuals()
+{
+	if(BodyPart)
+	{
+		if(BodyPart->PartInfo.PartMesh)
+		{
+			MeshComponent->SetStaticMesh(BodyPart->PartInfo.PartMesh);
+		}
+
+		if(InteractionComponent)
+		{
+			InteractionComponent->InitWithPartInfo(BodyPart->PartInfo);
+			InteractionComponent->RequestRedraw();
+		}
+	}
+
+	
+}
+
+void AEquipmentActor::SetBodyPart(UBodyPart* InBodyPart)
+{
+	BodyPart = InBodyPart;
+}
+
+void AEquipmentActor::SetBodyPartClass(TSubclassOf<UBodyPart> InBodyPartClass)
+{
+	BodyPartClass = InBodyPartClass;
+}
+
 

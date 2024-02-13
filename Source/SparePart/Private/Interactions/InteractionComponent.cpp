@@ -20,16 +20,23 @@ UInteractionComponent::UInteractionComponent()
 }
 
 
+void UInteractionComponent::RegisterToSubsystem()
+{
+	if(UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(this))
+	{
+		if(UInteractionSubsystem* InteractionSubsystem = GameInstance->GetSubsystem<UInteractionSubsystem>())
+		{
+			InteractionSubsystem->RegisterInteraction(this);
+		}
+	}
+}
+
 // Called when the game starts
 void UInteractionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(UInteractionSubsystem* InteractionSubsystem = UGameplayStatics::GetGameInstance(this)->GetSubsystem<
-		UInteractionSubsystem>())
-	{
-		InteractionSubsystem->RegisterInteraction(this);
-	}
+	RegisterToSubsystem();
 }
 
 void UInteractionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -48,6 +55,13 @@ void UInteractionComponent::ResetUsability()
 	bIsAvailable = true;
 }
 
+
+void UInteractionComponent::OnRegister()
+{
+	Super::OnRegister();
+
+	RegisterToSubsystem();
+}
 
 void UInteractionComponent::ReInit()
 {

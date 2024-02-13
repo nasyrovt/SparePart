@@ -37,7 +37,7 @@ public:
 	// TSoftObjectPtr<Texture> PartImage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSoftObjectPtr<UStaticMesh> PartMesh;
+	UStaticMesh* PartMesh;
 };
 
 

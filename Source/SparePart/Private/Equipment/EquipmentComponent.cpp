@@ -12,7 +12,8 @@ UEquipmentComponent::UEquipmentComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
+	ScaleOverride = FVector(1.f);
+	SpawnOffset = FVector(50.f);
 	// ...
 }
 
@@ -50,9 +51,32 @@ void UEquipmentComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 
 void UEquipmentComponent::DropBodyPartBySlot(EBodyPartType InBodyPart)
 {
-	if(TSubclassOf<UBodyPart> BodyPart = BodyPartsClassMap[InBodyPart])
+	if(const TSubclassOf<UBodyPart> BodyPart = BodyPartsClassMap[InBodyPart])
 	{
-		AEquipmentActor* ItemToDrop = NewObject<AEquipmentActor>();
+		FTransform Transform = GetOwner()->GetTransform();
+		FVector OffsetLocation = Transform.GetLocation() + SpawnOffset;
+		TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+		ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
+		ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
+		
+		FHitResult HitResult;
+		TArray<AActor*> ActorsToIgnore;
+		if(UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(),
+			OffsetLocation,
+			OffsetLocation + 2000*FVector(0.f, 0.f,-1.f),
+			ObjectTypes, false,
+			ActorsToIgnore, EDrawDebugTrace::None,
+			HitResult, true))
+		{
+			Transform.SetLocation(HitResult.Location);
+		}
+		Transform.SetRotation(Transform.GetRotation());
+		Transform.SetScale3D(ScaleOverride);
+
+		AEquipmentActor* ItemToDrop = Cast<AEquipmentActor>(GetWorld()->SpawnActor(EquipmentActorClassOverride, &Transform));
+		ItemToDrop->SetBodyPartClass(BodyPart);
+		ItemToDrop->SetBodyPart(BodyPartsMap[InBodyPart]);
+		ItemToDrop->UpdateVisuals();
 	}
 	
 }
