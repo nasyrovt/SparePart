@@ -7,7 +7,7 @@
 
 UBodyPart::UBodyPart()
 {
-	World = GetWorld();
+	
 }
 
 void UBodyPart::ActionInputPressed()

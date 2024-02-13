@@ -55,9 +55,6 @@ private:
 	UPROPERTY(BlueprintReadOnly, Transient, meta=(AllowPrivateAccess))
 	ACharacter* OwnerCharacter;
 
-	UPROPERTY(BlueprintReadOnly, Transient, meta=(AllowPrivateAccess))
-	UWorld* World;
-
 public:
 	UBodyPart();
 

@@ -30,13 +30,6 @@ void UInteractionComponent::BeginPlay()
 	{
 		InteractionSubsystem->RegisterInteraction(this);
 	}
-
-	if(bHasPopup)
-	{
-		UInteractionPopupComponent* PopupWC = NewObject<UInteractionPopupComponent>(this);
-		PopupWC->RegisterComponentWithWorld(GetWorld());
-		PopupWC->SetWidgetClass(PopupWidgetClass);
-	}
 }
 
 void UInteractionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -76,7 +69,6 @@ void UInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 			UpdateInteractionIndicatorState(GetDistanceToPlayer());
 			UpdateInteractionButtonVisibility(CanBeExecuted());
 		}
-		
 	}
 	else
 	{
@@ -150,5 +142,10 @@ void UInteractionComponent::Execute()
 	{
 		OnInteractionExecuted.Broadcast();
 	}
+}
+
+void UInteractionComponent::InitWithPartInfo(const FBodyPartInfo& PartInfo)
+{
+	InitWithPartInfoBP(PartInfo);
 }
 

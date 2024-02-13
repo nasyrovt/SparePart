@@ -3,6 +3,9 @@
 
 #include "Equipment/EquipmentComponent.h"
 
+#include "Equipment/EquipmentActor.h"
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values for this component's properties
 UEquipmentComponent::UEquipmentComponent()
 {
@@ -45,16 +48,30 @@ void UEquipmentComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	// ...
 }
 
+void UEquipmentComponent::DropBodyPartBySlot(EBodyPartType InBodyPart)
+{
+	if(TSubclassOf<UBodyPart> BodyPart = BodyPartsClassMap[InBodyPart])
+	{
+		AEquipmentActor* ItemToDrop = NewObject<AEquipmentActor>();
+	}
+	
+}
+
 void UEquipmentComponent::SetBodyPartBySlot(const EBodyPartType BodyPartType, const TSubclassOf<UBodyPart> BodyPartClass)
 {
 	if(BodyPartClass)
 	{
+		if(BodyPartsClassMap.Contains(BodyPartType))
+		{
+			DropBodyPartBySlot(BodyPartType);
+		}
 		BodyPartsClassMap.Add(BodyPartType, BodyPartClass);
 		UBodyPart* NewBodyPart = NewObject<UBodyPart>(this, BodyPartClass);
 		if(ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner()))
 		{
 			NewBodyPart->SetOwner(OwnerCharacter);
 		}
+		
 		BodyPartsMap.Add(BodyPartType, NewBodyPart);
 	}
 }

@@ -3,7 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InteractionPopupComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Equipment/BodyPart.h"
 #include "InteractionComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractionExecuted);
@@ -26,6 +28,9 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	void ResetUsability();
+
+	UPROPERTY(Transient)
+	UInteractionPopupComponent* PopupWC = nullptr;
 
 public:
 
@@ -59,27 +64,32 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void ExecuteBP();
 
+	UFUNCTION(BlueprintCallable)
+	void InitWithPartInfo(const FBodyPartInfo& PartInfo);
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction")
+	UFUNCTION(BlueprintImplementableEvent)
+	void InitWithPartInfoBP(const FBodyPartInfo& PartInfo);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction|Settings")
 	bool bIsReusable = false;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction", meta=(EditCondition=bIsReusable))
 	float ReuseResetTime = 3.f;
 	
 	FTimerHandle ReuseTimer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction|Widget")
+	FText InteractionText;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction|Settings")
 	float VisibilityDistance = 100.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction|Settings")
 	float ExecutionDistance = 100.f;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interaction")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interaction|Debug")
 	bool bIsAvailable = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction|Popup")
 	bool bHasPopup;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction|Popup", meta=(EditCondition=bHasPopup))
-	TSubclassOf<UUserWidget> PopupWidgetClass;
 };

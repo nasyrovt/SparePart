@@ -32,6 +32,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Equipment")
 	TMap<TEnumAsByte<EBodyPartType>, TSubclassOf<UBodyPart>> BodyPartsClassMap;
 
+	void DropBodyPartBySlot(EBodyPartType BodyPart);
+	
 	UFUNCTION(BlueprintCallable, Category="Equipment")
 	void SetBodyPartBySlot(EBodyPartType BodyPartType, TSubclassOf<UBodyPart> BodyPartClass);
 
