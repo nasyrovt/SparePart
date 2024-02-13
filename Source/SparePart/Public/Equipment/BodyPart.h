@@ -21,16 +21,16 @@ struct FBodyPartInfo
 	GENERATED_BODY()
 public:
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TEnumAsByte<EBodyPartType> PartType;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText PartName;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText PartDescription;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSoftObjectPtr<UMeshComponent> PartMesh;
 };
 
@@ -52,7 +52,7 @@ private:
 public:
 	UBodyPart();
 
-	UPROPERTY(EditAnywhere, Category="Part Info")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Part Info")
 	FBodyPartInfo PartInfo;
 
 	UFUNCTION(BlueprintCallable)
