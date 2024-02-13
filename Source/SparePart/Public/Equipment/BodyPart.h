@@ -65,7 +65,10 @@ public:
 	FBodyPartInfo PartInfo;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void FireAction() override;
+	virtual void ActionInputPressed() override;
+
+	UFUNCTION(BlueprintCallable)
+	virtual void ActionInputReleased() override;
 
 	void SetOwner(ACharacter* InOwner);
 };

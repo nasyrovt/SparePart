@@ -63,7 +63,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction")
 	bool bIsReusable = false;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction", meta=(EditConditionHides=bIsReusable))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction", meta=(EditCondition=bIsReusable))
 	float ReuseResetTime = 3.f;
 	
 	FTimerHandle ReuseTimer;
@@ -80,6 +80,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction|Popup")
 	bool bHasPopup;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction|Popup")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction|Popup", meta=(EditCondition=bHasPopup))
 	TSubclassOf<UUserWidget> PopupWidgetClass;
 };

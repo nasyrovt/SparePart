@@ -4,6 +4,7 @@
 #include "Interactions/InteractionComponent.h"
 
 #include "GameFramework/Character.h"
+#include "Interactions/InteractionPopupComponent.h"
 #include "Interactions/InteractionSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -32,11 +33,10 @@ void UInteractionComponent::BeginPlay()
 
 	if(bHasPopup)
 	{
-		UWidgetComponent* PopupWC = NewObject<UWidgetComponent>();
-		UUserWidget* PopupWidget = NewObject<UUserWidget>(this, PopupWidgetClass);
-		
+		UInteractionPopupComponent* PopupWC = NewObject<UInteractionPopupComponent>(this);
+		PopupWC->RegisterComponentWithWorld(GetWorld());
+		PopupWC->SetWidgetClass(PopupWidgetClass);
 	}
-	
 }
 
 void UInteractionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)

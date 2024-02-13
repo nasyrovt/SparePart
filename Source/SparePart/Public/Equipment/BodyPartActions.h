@@ -24,11 +24,19 @@ class SPAREPART_API IBodyPartActions
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	
-	virtual void FireAction()
+	virtual void ActionInputPressed()
 	{
-		FireActionBP();
+		ActionInputPressedBP();
 	}
 	
 	UFUNCTION(BlueprintImplementableEvent)
-	void FireActionBP();
+	void ActionInputPressedBP();
+
+	virtual void ActionInputReleased()
+	{
+		ActionInputReleasedBP();
+	}
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void ActionInputReleasedBP();
 };
