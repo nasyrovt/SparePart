@@ -7,6 +7,7 @@
 
 UBodyPart::UBodyPart()
 {
+	World = GetWorld();
 }
 
 void UBodyPart::FireAction()
@@ -18,4 +19,5 @@ void UBodyPart::SetOwner(ACharacter* InOwner)
 {
 	OwnerCharacter = InOwner;
 }
+
 

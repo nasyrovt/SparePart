@@ -29,6 +29,13 @@ void UInteractionComponent::BeginPlay()
 	{
 		InteractionSubsystem->RegisterInteraction(this);
 	}
+
+	if(bHasPopup)
+	{
+		UWidgetComponent* PopupWC = NewObject<UWidgetComponent>();
+		UUserWidget* PopupWidget = NewObject<UUserWidget>(this, PopupWidgetClass);
+		
+	}
 	
 }
 

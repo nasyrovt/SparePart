@@ -31,7 +31,13 @@ public:
 	FText PartDescription;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSoftObjectPtr<UMeshComponent> PartMesh;
+	FText PartModificationText;
+
+	// UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	// TSoftObjectPtr<Texture> PartImage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSoftObjectPtr<UStaticMesh> PartMesh;
 };
 
 
@@ -40,7 +46,7 @@ public:
  * 
  */
 UCLASS(Blueprintable, BlueprintType)
-class SPAREPART_API UBodyPart : public UObject, public IBodyPartActions
+class SPAREPART_API UBodyPart : public UActorComponent, public IBodyPartActions
 {
 	GENERATED_BODY()
 
@@ -48,6 +54,9 @@ private:
 
 	UPROPERTY(BlueprintReadOnly, Transient, meta=(AllowPrivateAccess))
 	ACharacter* OwnerCharacter;
+
+	UPROPERTY(BlueprintReadOnly, Transient, meta=(AllowPrivateAccess))
+	UWorld* World;
 
 public:
 	UBodyPart();
@@ -58,6 +67,5 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void FireAction() override;
 
-	UFUNCTION()
 	void SetOwner(ACharacter* InOwner);
 };
