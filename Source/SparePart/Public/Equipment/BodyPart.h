@@ -21,17 +21,23 @@ struct FBodyPartInfo
 	GENERATED_BODY()
 public:
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TEnumAsByte<EBodyPartType> PartType;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText PartName;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText PartDescription;
 
-	UPROPERTY(EditAnywhere)
-	TSoftObjectPtr<UMeshComponent> PartMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FText PartModificationText;
+
+	// UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	// TSoftObjectPtr<Texture> PartImage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSoftObjectPtr<UStaticMesh> PartMesh;
 };
 
 
@@ -40,7 +46,7 @@ public:
  * 
  */
 UCLASS(Blueprintable, BlueprintType)
-class SPAREPART_API UBodyPart : public UObject, public IBodyPartActions
+class SPAREPART_API UBodyPart : public UActorComponent, public IBodyPartActions
 {
 	GENERATED_BODY()
 
@@ -49,15 +55,20 @@ private:
 	UPROPERTY(BlueprintReadOnly, Transient, meta=(AllowPrivateAccess))
 	ACharacter* OwnerCharacter;
 
+	UPROPERTY(BlueprintReadOnly, Transient, meta=(AllowPrivateAccess))
+	UWorld* World;
+
 public:
 	UBodyPart();
 
-	UPROPERTY(EditAnywhere, Category="Part Info")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Part Info")
 	FBodyPartInfo PartInfo;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void FireAction() override;
+	virtual void ActionInputPressed() override;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
+	virtual void ActionInputReleased() override;
+
 	void SetOwner(ACharacter* InOwner);
 };

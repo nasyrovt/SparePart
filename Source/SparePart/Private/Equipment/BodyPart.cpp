@@ -7,15 +7,22 @@
 
 UBodyPart::UBodyPart()
 {
+	World = GetWorld();
 }
 
-void UBodyPart::FireAction()
+void UBodyPart::ActionInputPressed()
 {
-	Execute_FireActionBP(this);
+	Execute_ActionInputPressedBP(this);
+}
+
+void UBodyPart::ActionInputReleased()
+{
+	Execute_ActionInputReleasedBP(this);
 }
 
 void UBodyPart::SetOwner(ACharacter* InOwner)
 {
 	OwnerCharacter = InOwner;
 }
+
 
