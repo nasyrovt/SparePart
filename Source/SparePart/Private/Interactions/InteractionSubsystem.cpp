@@ -27,7 +27,7 @@ TStatId UInteractionSubsystem::GetStatId() const
 	return Super::GetStatID();
 }
 
-void UInteractionSubsystem::Tick(float DeltaTime)
+void UInteractionSubsystem::UpdateClosestToPlayerInteraction()
 {
 	if(const ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(this, 0))
 	{
@@ -46,6 +46,11 @@ void UInteractionSubsystem::Tick(float DeltaTime)
 	}
 }
 
+void UInteractionSubsystem::Tick(float DeltaTime)
+{
+	UpdateClosestToPlayerInteraction();
+}
+
 void UInteractionSubsystem::RegisterInteraction(UInteractionComponent* Interaction)
 {
 	InteractionsArray.Add(Interaction);
@@ -62,4 +67,12 @@ void UInteractionSubsystem::UnregisterInteraction(UInteractionComponent* Interac
 bool UInteractionSubsystem::IsComponentClosestToPlayer(const UInteractionComponent* InteractionComponent) const
 {
 	return InteractionComponent == ClosestToPlayerInteraction;
+}
+
+void UInteractionSubsystem::HandleInteractionInputPressed()
+{
+	if(ClosestToPlayerInteraction)
+	{
+		ClosestToPlayerInteraction->Execute();
+	}
 }

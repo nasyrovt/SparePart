@@ -24,6 +24,8 @@ public:
 
 protected:
 
+	void HandleInteractionInput();
+	
 	virtual void SetupInputComponent() override;
 	
 	// To add mapping context

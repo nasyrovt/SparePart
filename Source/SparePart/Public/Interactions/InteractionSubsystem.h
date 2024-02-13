@@ -22,12 +22,14 @@ public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 
 	virtual TStatId GetStatId() const override;
+	void UpdateClosestToPlayerInteraction();
 
 	virtual void Tick(float DeltaTime) override;
 	
 	void RegisterInteraction(class UInteractionComponent* Interaction);
 	void UnregisterInteraction(class UInteractionComponent* Interaction);
 	bool IsComponentClosestToPlayer(const UInteractionComponent* InteractionComponent) const;
+	void HandleInteractionInputPressed();
 
 private:
 	UPROPERTY(Transient)

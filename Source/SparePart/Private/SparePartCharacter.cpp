@@ -13,6 +13,7 @@
 #include "Materials/Material.h"
 #include "Engine/World.h"
 #include "Equipment/EquipmentComponent.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
 
 ASparePartCharacter::ASparePartCharacter()
 {
@@ -44,6 +45,7 @@ ASparePartCharacter::ASparePartCharacter()
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	
 	EquipmentComponent = CreateDefaultSubobject<UEquipmentComponent>(TEXT("EquipmentComponent"));
+	StimuliSourceComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("StimuliSourceComponent"));
 	
 	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;

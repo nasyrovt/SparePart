@@ -43,9 +43,15 @@ void UInteractionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 }
 
+void UInteractionComponent::ResetUsability()
+{
+	
+}
+
 
 void UInteractionComponent::ReInit()
 {
+	ReuseTimer.Invalidate();
 	ReInitBP();
 }
 
@@ -109,5 +115,16 @@ bool UInteractionComponent::CanBeVisible()
 		return false;
 	}
 	return true;
+}
+
+void UInteractionComponent::Execute()
+{
+	ExecuteBP();
+
+	if(bIsReusable)
+	{
+		//FTimerManager::SetTimer(ReuseTimer, &UInteractionComponent::ResetUsability, ReuseResetTime, false);
+	}
+
 }
 

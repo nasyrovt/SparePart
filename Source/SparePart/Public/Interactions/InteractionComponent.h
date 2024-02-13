@@ -21,6 +21,8 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	void ResetUsability();
+
 public:
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -48,6 +50,20 @@ public:
 	UFUNCTION(BlueprintPure)
 	virtual bool CanBeVisible();
 
+	virtual void Execute();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ExecuteBP();
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction")
+	bool bIsReusable = false;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction", meta=(EditConditionHides=bIsReusable))
+	float ReuseResetTime = 3.f;
+	
+	FTimerHandle ReuseTimer;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction")
 	float VisibilityDistance = 100.f;
 
