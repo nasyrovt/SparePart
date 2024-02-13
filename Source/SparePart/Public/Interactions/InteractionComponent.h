@@ -6,6 +6,7 @@
 #include "Components/WidgetComponent.h"
 #include "InteractionComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractionExecuted);
 
 UCLASS(Blueprintable, BlueprintType, meta=(BlueprintSpawnableComponent))
 class SPAREPART_API UInteractionComponent : public UWidgetComponent
@@ -16,6 +17,9 @@ public:
 	// Sets default values for this component's properties
 	UInteractionComponent();
 
+	UPROPERTY(BlueprintAssignable)
+	FOnInteractionExecuted OnInteractionExecuted;
+	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -68,5 +72,8 @@ public:
 	float VisibilityDistance = 100.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interaction")
-	float AvailabilityDistance = 100.f;
+	float ExecutionDistance = 100.f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Interaction")
+	bool bIsAvailable = true;
 };

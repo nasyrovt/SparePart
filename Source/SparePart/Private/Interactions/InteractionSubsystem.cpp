@@ -32,7 +32,7 @@ void UInteractionSubsystem::UpdateClosestToPlayerInteraction()
 	if(const ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(this, 0))
 	{
 		const FVector PlayerLocation = PlayerCharacter->GetActorLocation();
-		float ClosestToPlayerDistance = FVector::Distance(PlayerLocation, InteractionsArray[0]->GetComponentLocation());
+		float ClosestToPlayerDistance = 2000.f;
 		for (UInteractionComponent* Interaction : InteractionsArray)
 		{
 			FVector CurrentComponentLocation = Interaction->GetComponentLocation();

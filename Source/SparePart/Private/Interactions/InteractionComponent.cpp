@@ -45,13 +45,14 @@ void UInteractionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void UInteractionComponent::ResetUsability()
 {
-	
+	bIsAvailable = true;
 }
 
 
 void UInteractionComponent::ReInit()
 {
 	ReuseTimer.Invalidate();
+	
 	ReInitBP();
 }
 
@@ -68,6 +69,7 @@ void UInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 			UpdateInteractionIndicatorState(GetDistanceToPlayer());
 			UpdateInteractionButtonVisibility(CanBeExecuted());
 		}
+		
 	}
 	else
 	{
@@ -99,8 +101,10 @@ float UInteractionComponent::GetDistanceToPlayer()
 
 bool UInteractionComponent::CanBeExecuted()
 {
+	if(!bIsAvailable) return false;
+	
 	const float DistanceToPlayer = GetDistanceToPlayer();
-	if(DistanceToPlayer == -1.f || DistanceToPlayer > AvailabilityDistance)
+	if(DistanceToPlayer == -1.f || DistanceToPlayer > ExecutionDistance)
 	{
 		return false;
 	}
@@ -109,6 +113,8 @@ bool UInteractionComponent::CanBeExecuted()
 
 bool UInteractionComponent::CanBeVisible()
 {
+	if(!bIsAvailable) return false;
+	
 	const float DistanceToPlayer = GetDistanceToPlayer();
 	if(DistanceToPlayer == -1.f || DistanceToPlayer > VisibilityDistance)
 	{
@@ -119,12 +125,23 @@ bool UInteractionComponent::CanBeVisible()
 
 void UInteractionComponent::Execute()
 {
+	if(!CanBeExecuted()) return;
+	
+	//Execution logic here
+	bIsAvailable = false;
+	ReInit();
+	
 	ExecuteBP();
 
 	if(bIsReusable)
 	{
-		//FTimerManager::SetTimer(ReuseTimer, &UInteractionComponent::ResetUsability, ReuseResetTime, false);
+		GetWorld()->GetTimerManager().SetTimer(ReuseTimer, this,
+			&UInteractionComponent::ResetUsability, ReuseResetTime, false);
 	}
-
+	
+	if(OnInteractionExecuted.IsBound())
+	{
+		OnInteractionExecuted.Broadcast();
+	}
 }
 
