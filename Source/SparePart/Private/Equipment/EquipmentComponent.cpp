@@ -77,6 +77,7 @@ void UEquipmentComponent::DropBodyPartBySlot(EBodyPartType InBodyPart)
 		ItemToDrop->SetBodyPartClass(BodyPart);
 		ItemToDrop->SetBodyPart(BodyPartsMap[InBodyPart]);
 		ItemToDrop->UpdateVisuals();
+		BodyPartsMap[InBodyPart]->OnDropped();
 	}
 	
 }
@@ -98,7 +99,7 @@ void UEquipmentComponent::SetBodyPartBySlot(const EBodyPartType BodyPartType, co
 		
 		BodyPartsMap.Add(BodyPartType, NewBodyPart);
 
-		NewBodyPart->Initialize();
+		NewBodyPart->OnAddedToPlayer();
 	}
 }
 

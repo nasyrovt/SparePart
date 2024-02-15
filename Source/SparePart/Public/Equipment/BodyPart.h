@@ -69,8 +69,13 @@ public:
 
 	void SetOwner(ACharacter* InOwner);
 	
-	void Initialize();
+	void OnAddedToPlayer();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void InitializeBP();
+	void OnAddedToPlayerBP();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDroppedBP();
+
+	void OnDropped();
 };
