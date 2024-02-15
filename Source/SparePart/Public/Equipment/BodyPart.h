@@ -68,4 +68,9 @@ public:
 	virtual void ActionInputReleased() override;
 
 	void SetOwner(ACharacter* InOwner);
+	
+	void Initialize();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void InitializeBP();
 };
