@@ -68,4 +68,14 @@ public:
 	virtual void ActionInputReleased() override;
 
 	void SetOwner(ACharacter* InOwner);
+	
+	void OnAddedToPlayer();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnAddedToPlayerBP();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDroppedBP();
+
+	void OnDropped();
 };

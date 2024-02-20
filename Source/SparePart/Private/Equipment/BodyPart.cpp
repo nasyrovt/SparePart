@@ -25,4 +25,14 @@ void UBodyPart::SetOwner(ACharacter* InOwner)
 	OwnerCharacter = InOwner;
 }
 
+void UBodyPart::OnAddedToPlayer()
+{
+	OnAddedToPlayerBP();
+}
+
+void UBodyPart::OnDropped()
+{
+	OnDroppedBP();
+}
+
 
