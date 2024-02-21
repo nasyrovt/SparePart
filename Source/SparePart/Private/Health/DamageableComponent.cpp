@@ -46,5 +46,5 @@ void UDamageableComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 void UDamageableComponent::PassHealthBarReference(UHealthBarWidget* HealthBarWidget)
 {
 	Super::SetWidget(HealthBarWidget);
-	Super::SetHiddenInGame(true);
+	Super::SetHiddenInGame(true); 
 }
