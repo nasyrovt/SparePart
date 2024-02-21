@@ -21,16 +21,22 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	UFUNCTION()
+	void ShouldDie();
+	UFUNCTION()
+	void Die(FName name);
 	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Health")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn), Category="Health")
 	float maxHealth;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Health")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn), Category="Health")
 	float currentHealth;
-
+	
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 	UFUNCTION(BlueprintCallable)
 	void PassHealthBarReference(UHealthBarWidget* HealthBarWidget);
+	UFUNCTION(BlueprintCallable)
+	float DealDamage(float damage);
 };

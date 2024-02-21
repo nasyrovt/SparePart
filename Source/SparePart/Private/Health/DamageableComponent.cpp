@@ -3,6 +3,8 @@
 
 #include "Health/DamageableComponent.h"
 
+#include "PlayMontageCallbackProxy.h"
+#include "GameFramework/Character.h"
 #include "Health/HealthBarWidget.h"
 
 
@@ -33,6 +35,35 @@ void UDamageableComponent::BeginPlay()
 	
 }
 
+void UDamageableComponent::Die(FName name)
+{
+	if (ACharacter* Owner = Cast<ACharacter>(GetOwner()))
+	{
+		Owner->SetActorTickEnabled(false);
+	}
+}
+
+
+void UDamageableComponent::ShouldDie()
+{
+	if (currentHealth <= 0)
+	{
+		if (ACharacter* Owner = Cast<ACharacter>(GetOwner()))
+		{
+			USkeletalMeshComponent* Skeleton = Owner->GetMesh();
+
+			static ConstructorHelpers::FObjectFinder<UAnimMontage> montageRef(TEXT("/Game/Content/TopDown/Enemy/GunAnims/Dying_Montage.Dying_Montage"));
+			
+			if (UAnimInstance* AnimInstance = Skeleton->GetAnimInstance())
+			{
+				UPlayMontageCallbackProxy* PlayMontageCallbackProxy =
+					UPlayMontageCallbackProxy::CreateProxyObjectForPlayMontage(Skeleton, montageRef.Object);
+
+				PlayMontageCallbackProxy->OnCompleted.AddDynamic(this, &UDamageableComponent::Die);
+			}
+		}
+	}
+}
 
 // Called every frame
 void UDamageableComponent::TickComponent(float DeltaTime, ELevelTick TickType,
@@ -47,4 +78,12 @@ void UDamageableComponent::PassHealthBarReference(UHealthBarWidget* HealthBarWid
 {
 	Super::SetWidget(HealthBarWidget);
 	Super::SetHiddenInGame(true); 
+}
+
+float UDamageableComponent::DealDamage(float damage)
+{
+	// Can be extended to calculate damage w/ more complexity
+	currentHealth -= damage;
+	ShouldDie();
+	return damage;
 }
