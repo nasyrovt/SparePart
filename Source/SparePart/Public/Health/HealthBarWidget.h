@@ -17,6 +17,6 @@ class SPAREPART_API UHealthBarWidget : public UUserWidget
 public:
 	UHealthBarWidget(const FObjectInitializer& ObjectInitializer);
 	virtual bool Initialize() override;
-	UPROPERTY(BlueprintReadWrite, meta=(BindWidget), Category="Widget")
+	UPROPERTY(BlueprintReadWrite, meta=(BindWidgetOptional), Category="Widget")
 	UProgressBar* HealthBar;
 };

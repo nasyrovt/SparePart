@@ -4,6 +4,7 @@
 #include "Health/DamageableComponent.h"
 
 #include "PlayMontageCallbackProxy.h"
+#include "SparePartCharacter.h"
 #include "GameFramework/Character.h"
 #include "Health/HealthBarWidget.h"
 
@@ -17,12 +18,6 @@ UDamageableComponent::UDamageableComponent()
 
 	maxHealth = 100;
 	currentHealth = maxHealth;
-	
-	static ConstructorHelpers::FClassFinder<UHealthBarWidget> HealthBarWidgetClass(TEXT("/Game/SparePart/Public/Health/HealthBarWidget.h"));
-	if(HealthBarWidgetClass.Succeeded())
-	{
-		Super::WidgetClass = HealthBarWidgetClass.Class;
-	}
 }
 
 
@@ -31,8 +26,10 @@ void UDamageableComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	if(auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
+	{
+		healthBarWidget->HealthBar->SetPercent(currentHealth / maxHealth);
+	}
 }
 
 void UDamageableComponent::Die(FName name)
@@ -48,19 +45,20 @@ void UDamageableComponent::ShouldDie()
 {
 	if (currentHealth <= 0)
 	{
+		// TODO handle death
 		if (ACharacter* Owner = Cast<ACharacter>(GetOwner()))
 		{
-			USkeletalMeshComponent* Skeleton = Owner->GetMesh();
-
-			static ConstructorHelpers::FObjectFinder<UAnimMontage> montageRef(TEXT("/Game/Content/TopDown/Enemy/GunAnims/Dying_Montage.Dying_Montage"));
-			
-			if (UAnimInstance* AnimInstance = Skeleton->GetAnimInstance())
-			{
-				UPlayMontageCallbackProxy* PlayMontageCallbackProxy =
-					UPlayMontageCallbackProxy::CreateProxyObjectForPlayMontage(Skeleton, montageRef.Object);
-
-				PlayMontageCallbackProxy->OnCompleted.AddDynamic(this, &UDamageableComponent::Die);
-			}
+			// USkeletalMeshComponent* Skeleton = Owner->GetMesh();
+			// //TODO dont do that
+			// static ConstructorHelpers::FObjectFinder<UAnimMontage> montageRef(TEXT("/Game/Content/TopDown/Enemy/GunAnims/Dying_Montage.Dying_Montage"));
+			//
+			// if (UAnimInstance* AnimInstance = Skeleton->GetAnimInstance())
+			// {
+			// 	UPlayMontageCallbackProxy* PlayMontageCallbackProxy =
+			// 		UPlayMontageCallbackProxy::CreateProxyObjectForPlayMontage(Skeleton, montageRef.Object);
+			//
+			// 	PlayMontageCallbackProxy->OnCompleted.AddDynamic(this, &UDamageableComponent::Die);
+			// }
 		}
 	}
 }
@@ -74,16 +72,31 @@ void UDamageableComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	// ...
 }
 
+void UDamageableComponent::InitializeComponent()
+{
+	Super::InitializeComponent();
+
+	if (auto owner = Cast<ASparePartCharacter>(GetOwner()))
+	{
+		SetWidgetClass(nullptr);
+	} 
+}
+
 void UDamageableComponent::PassHealthBarReference(UHealthBarWidget* HealthBarWidget)
 {
-	Super::SetWidget(HealthBarWidget);
-	Super::SetHiddenInGame(true); 
+	HealthBarWidget->HealthBar->SetPercent(currentHealth / maxHealth);
+	SetWidget(HealthBarWidget);
+	SetDrawSize(FVector2d(0,0));
 }
 
 float UDamageableComponent::DealDamage(float damage)
 {
 	// Can be extended to calculate damage w/ more complexity
 	currentHealth -= damage;
+	if(auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
+	{
+		healthBarWidget->HealthBar->SetPercent(currentHealth / maxHealth);
+	}
 	ShouldDie();
 	return damage;
 }
