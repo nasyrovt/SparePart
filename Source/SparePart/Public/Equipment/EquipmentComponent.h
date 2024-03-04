@@ -7,6 +7,8 @@
 #include "Components/ActorComponent.h"
 #include "EquipmentComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewPartAdded, UBodyPart*, AddedBodyPart);
+
 
 class AEquipmentActor;
 
@@ -19,6 +21,9 @@ public:
 	// Sets default values for this component's properties
 	UEquipmentComponent();
 
+	UPROPERTY(BlueprintAssignable)
+	FOnNewPartAdded OnNewPartAdded;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -27,7 +32,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UPROPERTY(VisibleAnywhere, Category="Equipment")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Equipment")
 	TMap<TEnumAsByte<EBodyPartType>, UBodyPart*> BodyPartsMap;
 
 	UPROPERTY(EditDefaultsOnly, Category="Equipment")

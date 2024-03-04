@@ -8,7 +8,7 @@
 #include "BodyPart.generated.h"
 
 
-UENUM()
+UENUM(BlueprintType)
 enum EBodyPartType : uint8
 {
 	RightArm, LeftArm, Body, Head, Legs
