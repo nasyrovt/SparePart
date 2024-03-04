@@ -3,6 +3,7 @@
 
 #include "SparePart/Public/SparePartCharacter.h"
 
+#include "KismetTraceUtils.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "Components/DecalComponent.h"
@@ -55,4 +56,58 @@ ASparePartCharacter::ASparePartCharacter()
 void ASparePartCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+}
+
+AActor* ASparePartCharacter::GetAutoAimTarget(float range, float angle)
+{
+	AActor* result = nullptr;
+
+	TArray<FOverlapResult> overlapResults = TArray<FOverlapResult>();
+	// get box of the same length and width as cone, uses half-extent
+	auto collisionShape = FCollisionShape().MakeBox(FVector(range / 2.0f,
+	                                                          ((1 / tan(90 - (angle / 2))) * range / 2.0f) / 2.0f,
+	                                                          100.f));
+	auto collisionQueryParams = FCollisionQueryParams("autoAim", false, this);
+	// Do box overlap
+	GetWorld()->OverlapMultiByChannel(overlapResults, this->GetActorLocation(),
+	                                  this->GetActorRotation().Quaternion(),
+	                                  ECC_Pawn, collisionShape, collisionQueryParams);
+
+	//debug function for drawing the box, note that it doesn't quite spawn in the right spot
+	// DrawDebugBox(GetWorld(), (this->GetActorLocation() + this->GetActorForwardVector() * range / 2.0f), FVector(range / 2.0f,
+	//														  ((1 / tan(90 - (angle / 2))) * range / 2.0f) / 2.0f,
+	//														  100.f), FColor::Red, false, 2.0f);
+	
+	if (!overlapResults.IsEmpty())
+	{
+		FVector forwardVector = this->GetActorForwardVector();
+		FVector location = this->GetActorLocation();
+		TArray<AActor*> actorsInCone = TArray<AActor*>();
+		
+		for (FOverlapResult overlap : overlapResults)
+		{
+			// Check if actor is in auto aim cone
+			AActor* hitActor = overlap.GetActor();
+			FVector HitVector = location - hitActor->GetActorLocation();
+			float hitAngle = 1 / cos(forwardVector.Dot(HitVector) / (forwardVector.Length() * HitVector.Length()));
+			
+			if (hitAngle <= angle / 2.0f && hitActor->ActorHasTag("aimable"))
+			{
+				actorsInCone.Add(overlap.GetActor());
+			}
+		}
+
+		for (auto actor : actorsInCone)
+		{
+			if (!result)
+			{
+				result = actor;
+			}
+			else if((location - actor->GetActorLocation()).Length() < (location - result->GetActorLocation()).Length())
+			{
+				result = actor;
+			}
+		}
+	}
+	return result;
 }
