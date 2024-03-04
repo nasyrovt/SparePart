@@ -27,7 +27,7 @@ protected:
 	void Die(FName name);
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn), Category="Health")
-	float maxHealth;
+	float maxHealth = 100;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn), Category="Health")
 	float currentHealth;
 	
