@@ -100,6 +100,11 @@ void UEquipmentComponent::SetBodyPartBySlot(const EBodyPartType BodyPartType, co
 		BodyPartsMap.Add(BodyPartType, NewBodyPart);
 
 		NewBodyPart->OnAddedToPlayer();
+		
+		if(OnNewPartAdded.IsBound())
+		{
+			OnNewPartAdded.Broadcast(NewBodyPart);
+		}
 	}
 }
 
