@@ -7,6 +7,7 @@
 #include "SparePartCharacter.h"
 #include "GameFramework/Character.h"
 #include "Health/HealthBarWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values for this component's properties
@@ -15,8 +16,7 @@ UDamageableComponent::UDamageableComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	maxHealth = 100;
+	
 	currentHealth = maxHealth;
 }
 
@@ -46,8 +46,9 @@ void UDamageableComponent::ShouldDie()
 	if (currentHealth <= 0)
 	{
 		// TODO handle death
-		if (ACharacter* Owner = Cast<ACharacter>(GetOwner()))
+		if (auto Owner = Cast<ASparePartCharacter>(GetOwner()))
 		{
+			UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 			// USkeletalMeshComponent* Skeleton = Owner->GetMesh();
 			// //TODO dont do that
 			// static ConstructorHelpers::FObjectFinder<UAnimMontage> montageRef(TEXT("/Game/Content/TopDown/Enemy/GunAnims/Dying_Montage.Dying_Montage"));
@@ -59,6 +60,10 @@ void UDamageableComponent::ShouldDie()
 			//
 			// 	PlayMontageCallbackProxy->OnCompleted.AddDynamic(this, &UDamageableComponent::Die);
 			// }
+		}
+		else
+		{
+			GetOwner()->Destroy();
 		}
 	}
 }
