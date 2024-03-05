@@ -69,6 +69,11 @@ void UDamageableComponent::ShouldDie()
 	}
 }
 
+void UDamageableComponent::StartRegenerating()
+{
+	bIsRegenerating = true;
+}
+
 // Called every frame
 void UDamageableComponent::TickComponent(float DeltaTime, ELevelTick TickType,
                                          FActorComponentTickFunction* ThisTickFunction)
@@ -76,6 +81,15 @@ void UDamageableComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+	CurrentShield += bIsRegenerating * ShieldRegenPerSecond * DeltaTime;
+	if (CurrentShield > MaxShield)
+	{
+		CurrentShield = MaxShield;
+	}
+	if(auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
+	{
+		healthBarWidget->ShieldBar->SetPercent(CurrentShield / MaxShield);
+	}
 }
 
 void UDamageableComponent::InitializeComponent()
@@ -98,6 +112,12 @@ void UDamageableComponent::PassHealthBarReference(UHealthBarWidget* HealthBarWid
 float UDamageableComponent::TakeDamage(float damage)
 {
 	// Can be extended to calculate damage w/ more complexity
+	GetWorld()->GetTimerManager().SetTimer(
+		ShieldTimerHandle,
+		this,
+		&UDamageableComponent::StartRegenerating,
+		ShieldRegenDelay,
+		false);
 	CurrentShield -= damage;
 	if(CurrentShield < 0)
 	{
@@ -121,14 +141,21 @@ void UDamageableComponent::RemoveShield()
 	{
 		healthBarWidget->ShieldBar->SetPercent(0);
 	}
+	GetWorld()->GetTimerManager().ClearTimer(ShieldTimerHandle);
 }
 
-void UDamageableComponent::SetNewShield(float newShield)
+void UDamageableComponent::SetNewShield(float newShieldAmount, float newShieldRegenPerSecond, float newShieldRegenDelay)
 {
-	MaxShield = newShield;
-	CurrentShield = newShield;
+	MaxShield = newShieldAmount;
+	CurrentShield = newShieldAmount;
 	if(auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
 	{
 		healthBarWidget->ShieldBar->SetPercent(1);
 	}
+	GetWorld()->GetTimerManager().SetTimer(
+		ShieldTimerHandle,
+		this,
+		&UDamageableComponent::StartRegenerating,
+		ShieldRegenDelay,
+		false);
 }
