@@ -17,7 +17,8 @@ UDamageableComponent::UDamageableComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 	
-	currentHealth = maxHealth;
+	CurrentHealth = MaxHealth;
+	CurrentShield = MaxShield;
 }
 
 
@@ -28,7 +29,7 @@ void UDamageableComponent::BeginPlay()
 
 	if(auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
 	{
-		healthBarWidget->HealthBar->SetPercent(currentHealth / maxHealth);
+		healthBarWidget->HealthBar->SetPercent(CurrentHealth / MaxHealth);
 	}
 }
 
@@ -43,7 +44,7 @@ void UDamageableComponent::Die(FName name)
 
 void UDamageableComponent::ShouldDie()
 {
-	if (currentHealth <= 0)
+	if (CurrentHealth <= 0)
 	{
 		// TODO handle death
 		if (auto Owner = Cast<ASparePartCharacter>(GetOwner()))
@@ -89,7 +90,7 @@ void UDamageableComponent::InitializeComponent()
 
 void UDamageableComponent::PassHealthBarReference(UHealthBarWidget* HealthBarWidget)
 {
-	HealthBarWidget->HealthBar->SetPercent(currentHealth / maxHealth);
+	HealthBarWidget->HealthBar->SetPercent(CurrentHealth / MaxHealth);
 	SetWidget(HealthBarWidget);
 	SetDrawSize(FVector2d(0,0));
 }
@@ -97,11 +98,37 @@ void UDamageableComponent::PassHealthBarReference(UHealthBarWidget* HealthBarWid
 float UDamageableComponent::TakeDamage(float damage)
 {
 	// Can be extended to calculate damage w/ more complexity
-	currentHealth -= damage;
+	CurrentShield -= damage;
+	if(CurrentShield < 0)
+	{
+		CurrentHealth += CurrentShield;
+		CurrentShield = 0;
+	}
 	if(auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
 	{
-		healthBarWidget->HealthBar->SetPercent(currentHealth / maxHealth);
+		(MaxShield <= 0) ? healthBarWidget->ShieldBar->SetPercent(0) : healthBarWidget->ShieldBar->SetPercent(CurrentShield / MaxShield);
+		healthBarWidget->HealthBar->SetPercent(CurrentHealth / MaxHealth);
 	}
 	ShouldDie();
 	return damage;
+}
+
+void UDamageableComponent::RemoveShield()
+{
+	MaxShield = 0;
+	CurrentShield = 0;
+	if(auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
+	{
+		healthBarWidget->ShieldBar->SetPercent(0);
+	}
+}
+
+void UDamageableComponent::SetNewShield(float newShield)
+{
+	MaxShield = newShield;
+	CurrentShield = newShield;
+	if(auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
+	{
+		healthBarWidget->ShieldBar->SetPercent(1);
+	}
 }

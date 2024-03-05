@@ -25,11 +25,16 @@ protected:
 	void ShouldDie();
 	UFUNCTION()
 	void Die(FName name);
-	
+
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn), Category="Health")
-	float maxHealth = 100;
+	float MaxShield = 0;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn), Category="Health")
-	float currentHealth;
+	float CurrentShield;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn), Category="Health")
+	float MaxHealth = 100;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn), Category="Health")
+	float CurrentHealth;
 	
 public:
 	// Called every frame
@@ -38,6 +43,13 @@ public:
 	virtual void InitializeComponent() override;
 	UFUNCTION(BlueprintCallable)
 	void PassHealthBarReference(UHealthBarWidget* HealthBarWidget);
+	
 	UFUNCTION(BlueprintCallable)
 	float TakeDamage(float damage);
+
+	UFUNCTION(BlueprintCallable)
+	void SetNewShield(float newShield);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveShield();
 };

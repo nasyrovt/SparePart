@@ -19,4 +19,6 @@ public:
 	virtual bool Initialize() override;
 	UPROPERTY(BlueprintReadWrite, meta=(BindWidgetOptional), Category="Widget")
 	UProgressBar* HealthBar;
+	UPROPERTY(BlueprintReadWrite, meta=(BindWidgetOptional), Category="Widget")
+	UProgressBar* ShieldBar;
 };
