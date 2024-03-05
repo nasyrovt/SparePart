@@ -25,22 +25,35 @@ protected:
 	void ShouldDie();
 	UFUNCTION()
 	void Die(FName name);
-
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn), Category="Health")
+	float MaxHealth = 100;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn), Category="Health")
+	float CurrentHealth;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn), Category="Health")
 	float MaxShield = 0;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn), Category="Health")
 	float CurrentShield;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn), Category="Health")
-	float MaxHealth = 100;
+	float ShieldRegenPerSecond = 0;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn), Category="Health")
-	float CurrentHealth;
+	float ShieldRegenDelay = 0;
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsRegenerating = false;
+	
+	UPROPERTY(BlueprintReadWrite)
+	FTimerHandle ShieldTimerHandle;
+
+	UFUNCTION(BlueprintCallable)
+	void StartRegenerating();
 	
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 	virtual void InitializeComponent() override;
+	
 	UFUNCTION(BlueprintCallable)
 	void PassHealthBarReference(UHealthBarWidget* HealthBarWidget);
 	
@@ -48,7 +61,7 @@ public:
 	float TakeDamage(float damage);
 
 	UFUNCTION(BlueprintCallable)
-	void SetNewShield(float newShield);
+	void SetNewShield(float newShieldAmount, float newShieldRegenPerSecond, float newShieldRegenDelay);
 
 	UFUNCTION(BlueprintCallable)
 	void RemoveShield();
