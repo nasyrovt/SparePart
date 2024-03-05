@@ -94,7 +94,7 @@ void UDamageableComponent::PassHealthBarReference(UHealthBarWidget* HealthBarWid
 	SetDrawSize(FVector2d(0,0));
 }
 
-float UDamageableComponent::DealDamage(float damage)
+float UDamageableComponent::TakeDamage(float damage)
 {
 	// Can be extended to calculate damage w/ more complexity
 	currentHealth -= damage;

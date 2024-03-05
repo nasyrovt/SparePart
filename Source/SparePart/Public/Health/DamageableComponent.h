@@ -39,5 +39,5 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void PassHealthBarReference(UHealthBarWidget* HealthBarWidget);
 	UFUNCTION(BlueprintCallable)
-	float DealDamage(float damage);
+	float TakeDamage(float damage);
 };
