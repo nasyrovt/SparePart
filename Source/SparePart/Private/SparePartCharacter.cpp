@@ -74,9 +74,9 @@ AActor* ASparePartCharacter::GetAutoAimTarget(float range, float angle)
 	                                  ECC_Pawn, collisionShape, collisionQueryParams);
 
 	//debug function for drawing the box, note that it doesn't quite spawn in the right spot
-	// DrawDebugBox(GetWorld(), (this->GetActorLocation() + this->GetActorForwardVector() * range / 2.0f), FVector(range / 2.0f,
-	//														  ((1 / tan(90 - (angle / 2))) * range / 2.0f) / 2.0f,
-	//														  100.f), FColor::Red, false, 2.0f);
+	DrawDebugBox(GetWorld(), (this->GetActorLocation() + this->GetActorForwardVector() * range / 2.0f), FVector(range / 2.0f,
+															  ((1 / tan(90 - (angle / 2))) * range / 2.0f) / 2.0f,
+															  100.f), FColor::Red, true, 2.0f);
 	
 	if (!overlapResults.IsEmpty())
 	{
