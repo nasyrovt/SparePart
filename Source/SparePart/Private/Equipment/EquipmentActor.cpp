@@ -27,7 +27,7 @@ void AEquipmentActor::HandleInteractionPressed()
 		{
 			if(BodyPart && BodyPartClass)
 			{
-				EquipmentComponent->SetBodyPartBySlot(BodyPart->PartInfo.PartType, BodyPartClass);
+				EquipmentComponent->SetBodyPartBySlot(BodyPart->PartInfo, BodyPartClass);
 			}
 		}
 	}

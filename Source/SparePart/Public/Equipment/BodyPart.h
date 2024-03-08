@@ -38,6 +38,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UStaticMesh* PartMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bDefaultObject = false;
 };
 
 

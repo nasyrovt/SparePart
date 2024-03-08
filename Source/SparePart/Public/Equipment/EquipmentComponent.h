@@ -4,10 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "BodyPart.h"
+#include "UnknownBodyPartWidget.h"
 #include "Components/ActorComponent.h"
 #include "EquipmentComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNewPartAdded, UBodyPart*, AddedBodyPart);
+
+UCLASS(Config=Game, defaultconfig)
+class SPAREPART_API UEquipmentSettings : public UDeveloperSettings
+{
+	GENERATED_BODY()
+public:
+	UEquipmentSettings();
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UUnknownBodyPartWidget> UnknownWidgetClass;
+};
 
 
 class AEquipmentActor;
@@ -24,6 +36,12 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnNewPartAdded OnNewPartAdded;
 
+	UPROPERTY(Transient)
+	UUnknownBodyPartWidget* NewPartWidget = nullptr;
+
+	UPROPERTY(Transient)
+	AEquipmentActor* RecentlyDroppedItem = nullptr;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -39,6 +57,9 @@ public:
 	TMap<TEnumAsByte<EBodyPartType>, TSubclassOf<UBodyPart>> BodyPartsClassMap;
 
 	UPROPERTY(EditDefaultsOnly, Category="Equipment")
+	TSet<TSubclassOf<UBodyPart>> KnownParts;
+
+	UPROPERTY(EditDefaultsOnly, Category="Equipment")
 	FVector SpawnOffset;
 
 	UPROPERTY(EditDefaultsOnly, Category="Equipment")
@@ -47,10 +68,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Equipment")
 	TSubclassOf<AEquipmentActor> EquipmentActorClassOverride;
 
-	void DropBodyPartBySlot(EBodyPartType BodyPart);
+	AEquipmentActor* DropBodyPartBySlot(EBodyPartType BodyPart);
 	
 	UFUNCTION(BlueprintCallable, Category="Equipment")
-	void SetBodyPartBySlot(EBodyPartType BodyPartType, TSubclassOf<UBodyPart> BodyPartClass);
+	void SetBodyPartBySlot(FBodyPartInfo BodyPart, TSubclassOf<UBodyPart> BodyPartClass);
 
 	UFUNCTION(BlueprintCallable, Category="Equipment")
 	UBodyPart* GetBodyPartBySlot(EBodyPartType BodyPartType, bool &bSuccess);
