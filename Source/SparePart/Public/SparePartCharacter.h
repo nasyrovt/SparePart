@@ -25,7 +25,7 @@ public:
 	FORCEINLINE class UEquipmentComponent* GetEquipmentComponent() const { return EquipmentComponent; }
 
 	UFUNCTION(BlueprintCallable)
-	AActor* GetAutoAimTarget(float range, float angle);
+	AActor* GetAutoAimTarget();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Debug")
 	bool bDebugAutoAim = false;
@@ -45,6 +45,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = "true"))
 	class UAIPerceptionStimuliSourceComponent* StimuliSourceComponent;
 
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Aim, meta = (AllowPrivateAccess = "true"))
+	class UBoxComponent* AutoAimCollisionMesh;
 };
 

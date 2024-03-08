@@ -36,9 +36,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn), Category="Health")
 	float CurrentShield;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn), Category="Health")
-	float ShieldRegenPerSecond = 0;
+	float ShieldRegenPerSecond = 10;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(ExposeOnSpawn), Category="Health")
-	float ShieldRegenDelay = 0;
+	float ShieldRegenDelay = 2;
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsRegenerating = false;
 	
