@@ -26,6 +26,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	AActor* GetAutoAimTarget(float range, float angle);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Debug")
+	bool bDebugAutoAim = false;
+	
 private:
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -40,5 +44,7 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AI, meta = (AllowPrivateAccess = "true"))
 	class UAIPerceptionStimuliSourceComponent* StimuliSourceComponent;
+
+	
 };
 

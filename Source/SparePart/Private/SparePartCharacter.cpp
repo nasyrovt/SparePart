@@ -65,19 +65,21 @@ AActor* ASparePartCharacter::GetAutoAimTarget(float range, float angle)
 	TArray<FOverlapResult> overlapResults = TArray<FOverlapResult>();
 	// get box of the same length and width as cone, uses half-extent
 	auto collisionShape = FCollisionShape().MakeBox(FVector(range / 2.0f,
-	                                                          ((1 / tan(90 - (angle / 2))) * range / 2.0f) / 2.0f,
-	                                                          100.f));
+															  ((1 / tan(90 - (angle / 2))) * range / 2.0f) / 2.0f,
+															  100.f));
 	auto collisionQueryParams = FCollisionQueryParams("autoAim", false, this);
 	// Do box overlap
 	GetWorld()->OverlapMultiByChannel(overlapResults, this->GetActorLocation(),
-	                                  this->GetActorRotation().Quaternion(),
-	                                  ECC_Pawn, collisionShape, collisionQueryParams);
+									  this->GetActorRotation().Quaternion(),
+									  ECC_Pawn, collisionShape, collisionQueryParams);
 
 	//debug function for drawing the box, note that it doesn't quite spawn in the right spot
-	DrawDebugBox(GetWorld(), (this->GetActorLocation() + this->GetActorForwardVector() * range / 2.0f), FVector(range / 2.0f,
-															  ((1 / tan(90 - (angle / 2))) * range / 2.0f) / 2.0f,
-															  100.f), FColor::Red, true, 2.0f);
-	
+	if(bDebugAutoAim)
+	{
+		DrawDebugBox(GetWorld(), (this->GetActorLocation() + this->GetActorForwardVector() * range / 2.0f), FVector(range / 2.0f,
+																  ((1 / tan(90 - (angle / 2))) * range / 2.0f) / 2.0f,
+																  100.f), FColor::Red, false, 2.0f);
+	}
 	if (!overlapResults.IsEmpty())
 	{
 		FVector forwardVector = this->GetActorForwardVector();
