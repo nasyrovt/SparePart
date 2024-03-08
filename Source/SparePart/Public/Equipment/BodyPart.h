@@ -66,13 +66,18 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void ActionInputReleased() override;
-
+	
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
 	void SetOwner(ACharacter* InOwner);
 	
 	void OnAddedToPlayer();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnAddedToPlayerBP();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void TickBodyPart(float DeltaTime);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDroppedBP();

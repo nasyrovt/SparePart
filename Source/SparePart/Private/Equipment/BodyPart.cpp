@@ -7,7 +7,7 @@
 
 UBodyPart::UBodyPart()
 {
-	
+	PrimaryComponentTick.bCanEverTick = true;
 }
 
 void UBodyPart::ActionInputPressed()
@@ -18,6 +18,11 @@ void UBodyPart::ActionInputPressed()
 void UBodyPart::ActionInputReleased()
 {
 	Execute_ActionInputReleasedBP(this);
+}
+
+void UBodyPart::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
 void UBodyPart::SetOwner(ACharacter* InOwner)

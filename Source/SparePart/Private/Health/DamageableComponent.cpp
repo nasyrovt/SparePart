@@ -16,7 +16,7 @@ UDamageableComponent::UDamageableComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-	
+
 	CurrentHealth = MaxHealth;
 	CurrentShield = MaxShield;
 }
@@ -27,7 +27,7 @@ void UDamageableComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
+	if (auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
 	{
 		healthBarWidget->HealthBar->SetPercent(CurrentHealth / MaxHealth);
 	}
@@ -46,26 +46,7 @@ void UDamageableComponent::ShouldDie()
 {
 	if (CurrentHealth <= 0)
 	{
-		// TODO handle death
-		if (auto Owner = Cast<ASparePartCharacter>(GetOwner()))
-		{
-			UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
-			// USkeletalMeshComponent* Skeleton = Owner->GetMesh();
-			// //TODO dont do that
-			// static ConstructorHelpers::FObjectFinder<UAnimMontage> montageRef(TEXT("/Game/Content/TopDown/Enemy/GunAnims/Dying_Montage.Dying_Montage"));
-			//
-			// if (UAnimInstance* AnimInstance = Skeleton->GetAnimInstance())
-			// {
-			// 	UPlayMontageCallbackProxy* PlayMontageCallbackProxy =
-			// 		UPlayMontageCallbackProxy::CreateProxyObjectForPlayMontage(Skeleton, montageRef.Object);
-			//
-			// 	PlayMontageCallbackProxy->OnCompleted.AddDynamic(this, &UDamageableComponent::Die);
-			// }
-		}
-		else
-		{
-			GetOwner()->Destroy();
-		}
+		GetOwner()->Destroy();
 	}
 }
 
@@ -86,7 +67,7 @@ void UDamageableComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	{
 		CurrentShield = MaxShield;
 	}
-	if(auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
+	if (auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
 	{
 		healthBarWidget->ShieldBar->SetPercent(CurrentShield / MaxShield);
 	}
@@ -99,14 +80,14 @@ void UDamageableComponent::InitializeComponent()
 	if (auto owner = Cast<ASparePartCharacter>(GetOwner()))
 	{
 		SetWidgetClass(nullptr);
-	} 
+	}
 }
 
 void UDamageableComponent::PassHealthBarReference(UHealthBarWidget* HealthBarWidget)
 {
 	HealthBarWidget->HealthBar->SetPercent(CurrentHealth / MaxHealth);
 	SetWidget(HealthBarWidget);
-	SetDrawSize(FVector2d(0,0));
+	SetDrawSize(FVector2d(0, 0));
 }
 
 float UDamageableComponent::TakeDamage(float damage)
@@ -119,14 +100,16 @@ float UDamageableComponent::TakeDamage(float damage)
 		ShieldRegenDelay,
 		false);
 	CurrentShield -= damage;
-	if(CurrentShield < 0)
+	if (CurrentShield < 0)
 	{
 		CurrentHealth += CurrentShield;
 		CurrentShield = 0;
 	}
-	if(auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
+	if (auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
 	{
-		(MaxShield <= 0) ? healthBarWidget->ShieldBar->SetPercent(0) : healthBarWidget->ShieldBar->SetPercent(CurrentShield / MaxShield);
+		(MaxShield <= 0)
+			? healthBarWidget->ShieldBar->SetPercent(0)
+			: healthBarWidget->ShieldBar->SetPercent(CurrentShield / MaxShield);
 		healthBarWidget->HealthBar->SetPercent(CurrentHealth / MaxHealth);
 	}
 	ShouldDie();
@@ -137,7 +120,7 @@ void UDamageableComponent::RemoveShield()
 {
 	MaxShield = 0;
 	CurrentShield = 0;
-	if(auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
+	if (auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
 	{
 		healthBarWidget->ShieldBar->SetPercent(0);
 	}
@@ -148,7 +131,7 @@ void UDamageableComponent::SetNewShield(float newShieldAmount, float newShieldRe
 {
 	MaxShield = newShieldAmount;
 	CurrentShield = newShieldAmount;
-	if(auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
+	if (auto healthBarWidget = Cast<UHealthBarWidget>(GetWidget()))
 	{
 		healthBarWidget->ShieldBar->SetPercent(1);
 	}

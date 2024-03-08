@@ -46,7 +46,13 @@ void UEquipmentComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	for(const TTuple<TEnumAsByte<EBodyPartType>, UBodyPart*> BodyPart : BodyPartsMap)
+	{
+		if(BodyPart.Value)
+		{
+			BodyPart.Value->TickBodyPart(DeltaTime);
+		}
+	}
 }
 
 void UEquipmentComponent::DropBodyPartBySlot(EBodyPartType InBodyPart)
@@ -91,19 +97,23 @@ void UEquipmentComponent::SetBodyPartBySlot(const EBodyPartType BodyPartType, co
 			DropBodyPartBySlot(BodyPartType);
 		}
 		BodyPartsClassMap.Add(BodyPartType, BodyPartClass);
-		UBodyPart* NewBodyPart = NewObject<UBodyPart>(this, BodyPartClass);
+		//UBodyPart* NewBodyPart = NewObject<UBodyPart>(this, BodyPartClass);
+		
 		if(ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner()))
 		{
-			NewBodyPart->SetOwner(OwnerCharacter);
-		}
-		
-		BodyPartsMap.Add(BodyPartType, NewBodyPart);
+			if(UBodyPart* NewBodyPart = Cast<UBodyPart>(
+				OwnerCharacter->AddComponentByClass(BodyPartClass, false, FTransform(), true)))
+			{
+				NewBodyPart->SetOwner(OwnerCharacter);
+				BodyPartsMap.Add(BodyPartType, NewBodyPart);
 
-		NewBodyPart->OnAddedToPlayer();
+				NewBodyPart->OnAddedToPlayer();
 		
-		if(OnNewPartAdded.IsBound())
-		{
-			OnNewPartAdded.Broadcast(NewBodyPart);
+				if(OnNewPartAdded.IsBound())
+				{
+					OnNewPartAdded.Broadcast(NewBodyPart);
+				}
+			}
 		}
 	}
 }
