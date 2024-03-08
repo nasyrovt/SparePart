@@ -57,7 +57,7 @@ void UEquipmentComponent::DropBodyPartBySlot(EBodyPartType InBodyPart)
 		FVector OffsetLocation = Transform.GetLocation() + SpawnOffset;
 		TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 		ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
-		ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic));
+		ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
 		
 		FHitResult HitResult;
 		TArray<AActor*> ActorsToIgnore;
@@ -78,8 +78,8 @@ void UEquipmentComponent::DropBodyPartBySlot(EBodyPartType InBodyPart)
 		ItemToDrop->SetBodyPart(BodyPartsMap[InBodyPart]);
 		ItemToDrop->UpdateVisuals();
 		BodyPartsMap[InBodyPart]->OnDropped();
+		BodyPartsMap[InBodyPart]->DestroyComponent();
 	}
-	
 }
 
 void UEquipmentComponent::SetBodyPartBySlot(const EBodyPartType BodyPartType, const TSubclassOf<UBodyPart> BodyPartClass)
