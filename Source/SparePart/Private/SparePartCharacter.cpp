@@ -63,23 +63,24 @@ AActor* ASparePartCharacter::GetAutoAimTarget(float range, float angle)
 	AActor* result = nullptr;
 
 	TArray<FOverlapResult> overlapResults = TArray<FOverlapResult>();
+	float boxX = range / 2.0f;
+	float boxY = ((1 / tan(90 - (angle / 2))) * range / 2.0f) / 2.0f;
 	// get box of the same length and width as cone, uses half-extent
-	auto collisionShape = FCollisionShape().MakeBox(FVector(range / 2.0f,
-															  ((1 / tan(90 - (angle / 2))) * range / 2.0f) / 2.0f,
-															  100.f));
+	auto collisionShape = FCollisionShape().MakeBox(FVector(boxX,
+															boxY,
+	                                                        1000.f));
 	auto collisionQueryParams = FCollisionQueryParams("autoAim", false, this);
 	// Do box overlap
-	GetWorld()->OverlapMultiByChannel(overlapResults, this->GetActorLocation(),
-									  this->GetActorRotation().Quaternion(),
-									  ECC_Pawn, collisionShape, collisionQueryParams);
+	GetWorld()->OverlapMultiByChannel(overlapResults, this->GetActorLocation() + FVector(collisionShape.GetBox().X, collisionShape.GetBox().Y, 0),
+	                                  this->GetActorRotation().Quaternion(),
+	                                  ECC_Pawn, collisionShape, collisionQueryParams);
 
 	//debug function for drawing the box, note that it doesn't quite spawn in the right spot
-	if(bDebugAutoAim)
-	{
-		DrawDebugBox(GetWorld(), (this->GetActorLocation() + this->GetActorForwardVector() * range / 2.0f), FVector(range / 2.0f,
-																  ((1 / tan(90 - (angle / 2))) * range / 2.0f) / 2.0f,
-																  100.f), FColor::Red, false, 2.0f);
-	}
+	//
+	// DrawDebugBox(GetWorld(), (this->GetActorLocation() + this->GetActorForwardVector() * range / 2.0f), FVector(range / 2.0f,
+	// 														  ((1 / tan(90 - (angle / 2))) * range / 2.0f) / 2.0f,
+	// 														  100.f), FColor::Red, true, 2.0f);
+	
 	if (!overlapResults.IsEmpty())
 	{
 		FVector forwardVector = this->GetActorForwardVector();
@@ -93,7 +94,7 @@ AActor* ASparePartCharacter::GetAutoAimTarget(float range, float angle)
 			FVector HitVector = location - hitActor->GetActorLocation();
 			float hitAngle = 1 / cos(forwardVector.Dot(HitVector) / (forwardVector.Length() * HitVector.Length()));
 			
-			if (hitAngle <= angle / 2.0f && hitActor->ActorHasTag("aimable"))
+			if ((hitAngle <= angle / 2.0f || (HitVector.X < boxX / 1.5 && HitVector.Y < boxY / 1.5)) && hitActor->ActorHasTag("aimable"))
 			{
 				actorsInCone.Add(overlap.GetActor());
 			}
