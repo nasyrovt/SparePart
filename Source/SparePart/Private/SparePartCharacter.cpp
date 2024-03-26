@@ -3,12 +3,9 @@
 
 #include "SparePart/Public/SparePartCharacter.h"
 
-#include "KismetTraceUtils.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
-#include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
-#include "Components/DecalComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
@@ -16,7 +13,6 @@
 #include "Materials/Material.h"
 #include "Engine/World.h"
 #include "Equipment/EquipmentComponent.h"
-#include "Factories/TextureFactory.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 
 ASparePartCharacter::ASparePartCharacter()

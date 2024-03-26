@@ -33,7 +33,7 @@ public:
 
 	FBodyPartInfo BodyPartInfo;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void HandleContinueButton();
 	
 	virtual void InitializeInputComponent() override;

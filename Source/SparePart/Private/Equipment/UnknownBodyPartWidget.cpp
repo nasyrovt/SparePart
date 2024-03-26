@@ -7,7 +7,7 @@
 
 UUnknownBodyPartWidget::UUnknownBodyPartWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	bStopAction = true;
+	SetInputActionBlocking(true);
 }
 
 void UUnknownBodyPartWidget::NativeConstruct()
